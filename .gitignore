@@ -1,0 +1,25 @@
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest_cache
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.DS_Store
+
+.env
+.env.*
+!.env.example
+
+# local copies of third-party review corpora
+data/op_spam*/
+data/Chicago_Hotel_Review/
+data/cached_dataset.pkl
+*.pkl
+
+# editor / OS
+.idea/
+.vscode/
+*.swp
