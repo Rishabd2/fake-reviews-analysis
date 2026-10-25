@@ -1,58 +1,123 @@
-# Methods
+# Methodology
 
-This is a cleaned writeup of the local project notes in `Fake Reviews_documentation.pdf`. Classifier numbers come from the executed notebooks, not from that PDF. The PDF does not report a confusion matrix or an accuracy for AI-generated reviews.
+All numbers referenced here are in `results/tables.md` and `results/summary.json`, produced by
+the commands in the README's Reproduce section. This file explains how they were produced.
 
 ## Question
 
-Can we tell genuine hotel reviews from two kinds of fakes: Mechanical Turk deception (Ott et al.) and GPT-4o-mini text written to look like a guest?
-
-Ott et al. (2011, 2013) built the Deceptive Opinion Spam Corpus and showed that n-gram and psycholinguistic features beat humans on crowdsourced fakes. The later work here asks what changes once the fake side includes a current LLM, and whether the same linguistic cues still move.
+Can a detector separate three kinds of hotel review: truthful guest reviews, fakes written by
+paid crowd workers (Ott et al. 2011, 2013), and fakes written by an LLM (GPT-4o-mini)? And how
+much of that separation comes from the text's style rather than from traces of how each set was
+collected or generated?
 
 ## Data
 
-**Human corpus.** Ott v1.4, 1,600 Chicago hotel reviews, 400 in each cell of truthful/deceptive × positive/negative. Truthful positive reviews are from TripAdvisor. Truthful negative reviews are from several travel sites. Deceptive reviews were written by paid Turkers. The corpus is not in this repo. See `data/README.md`.
+See `docs/DATA.md` for sources, licenses, and how the LLM reviews were generated.
 
-**AI corpus.** `src/generator.py` called Azure OpenAI `gpt-4o-mini` with persona and polarity. About 200 positive and 200 negative reviews were written to disk in the original workspace. Four of those files are in `data/samples/`. The rest are not committed.
-
-## Preprocessing
-
-`src/data_prep.py` lowercases text, expands contractions, strips punctuation, lemmatizes with WordNet, and drops English stopwords plus a short hotel-specific list (`chicago`, `hotel`, `room`, `stay`, and a few modals). `src/linguistic_feature.py` then counts words, core words, stop words, characters, and first-person singular / plural / third-person pronouns.
-
-## Generation
-
-**First pass (`src/archive/llm2.py`).** One system line ("You are an advanced AI trained to generate deceptive hotel reviews"), a free-text user prompt, `max_tokens=250`, `temperature=0.7`. No persona, no required polarity. Outputs were generic, stylistically similar, and easy to flag as machine-written.
-
-**Current pass (`src/generator.py`).** Each call picks a persona (family with two kids, frequent business traveler, couple on an anniversary, budget backpacker), a polarity, a stock opening ("When I arrived at the hotel", and similar), and a seed phrase (`spacious room` / `river view` / `helpful staff` or `dated décor` / `musty smell` / `weak coffee`). The prompt asks for about 90–110 words, mixed first person, one spatial detail, and at most two exclamation marks. The Azure client replaced the earlier public OpenAI `ChatCompletion` call.
-
-`src/review_eval.py` scores a batch with (1) mean max TF-IDF cosine similarity to truthful Ott reviews and (2) mean P(deceptive) from a unigram-bigram logistic regression fit on the full Ott set. If that probability is above 0.5 the batch is regenerated at `temperature + 0.1`. That regressor is a generation filter. It is not the reported detector, and it has no held-out split.
-
-The notes say a closed feedback loop that rewrites prompts from failed batches is "implemented in code yet to be tested."
-
-## Detection
-
-Three families were trained on the Ott truthful-vs-Turker task:
-
-1. **Bag of n-grams plus lexicon features → Random Forest / SVM.** Unigrams, bigrams, and trigrams from the cleaned tokens, concatenated with stop-word count, character count, sentence length, and first-person singular count. Random Forest test accuracy 90.3%. SVM after PCA (601 components, C=3) test accuracy 86.6%. Both from `notebooks/bag_of_words.ipynb`.
-2. **BERT.** Hugging Face / TF-Hub `bert-en-uncased`, classification head, small learning rate, few epochs. The PauDK README reports 92% test accuracy. The TensorFlow notebook saved 90.91% of truthful reviews predicted truthful and 93.55% of deceptive reviews predicted deceptive (those two numbers were printed as "TPR" and "FPR").
-3. **GloVe + LSTM / Conv1D.** Keras models on a 1200/400 split in `notebooks/glove_lstm_conv1d.ipynb`. Best validation accuracy was 88.0% (`model_glove`, epoch 30).
-
-Ott's own published figure of 87% is the baseline used in the original README. Human accuracy on this task is cited there as about 50%.
-
-## What the EDA showed
-
-On Ott v1.4, most lexicon histograms overlap. The project notes claimed deceptive reviews were longer and richer in core words. A rerun of `linguistic_feature.py` on the same 1,600 reviews does not support those two claims. Means from `results/linguistic_summary.csv`:
-
-| Feature | Deceptive | Truthful |
+| Class | id | n |
 | --- | --- | --- |
-| First-person singular | 7.48 | 4.68 |
-| First-person plural | 2.70 | 3.04 |
-| Core words | 61.8 | 67.0 |
-| Words | 147.7 | 150.6 |
-| Characters | 790.6 | 819.5 |
-| Stop words | 85.9 | 83.7 |
+| truthful | 0 | 800 |
+| crowdsourced fake (Mechanical Turk) | 1 | 800 |
+| LLM fake (GPT-4o-mini) | 2 | 400 |
 
-The first-person singular gap is the one that also shows up in the original `first_person_pronoun.png`. Stop-word rates are close. Those counts are the lexicon features fed to the Random Forest. `src/compute_linguistic_stats.py` writes the table without storing review text.
+The binary task uses classes 0 and 1 only (n = 1,600). The three-way task uses all 2,000.
 
-## What was not finished
+## Evaluation protocol
 
-The PDF lists next steps that were not closed in the local files: a side-by-side classifier for AI fakes vs Turker fakes, a tested prompt-feedback loop, and a human survey of perceived authenticity. Do not read the Ott-task accuracies as performance on GPT-4o-mini text.
+- **Folds.** Ott v1.4 ships five folds. Each fold contains every review for 4 of the 20 hotels, so
+  a model never sees the test hotels during training. LLM reviews name no hotel; file number
+  `i` goes to fold `(i - 1) mod 5 + 1`, which puts 40 positive and 40 negative LLM reviews in
+  every fold.
+- **Cross-validation.** Each fold is the test set once; the model is refit on the other four.
+  Predictions from the five test folds are pooled (every review predicted exactly once) and
+  metrics are computed on the pool.
+- **Fold 5 held out.** For the binary task the tables also report the fold-5 test set alone
+  (train on folds 1 to 4, n_test = 320), which is the same 80/20 size as the original notebook
+  but hotel-disjoint.
+- **Confidence intervals.** 95% percentile bootstrap, 2,000 resamples of the pooled predictions,
+  seed 0. The intervals cover test-set sampling only, not training variance across seeds.
+- **Metrics.** Accuracy; macro precision, recall, and F1 (unweighted mean over classes); for
+  the binary task, precision, recall, and F1 of the deceptive class; per-class recall and
+  confusion matrices for the three-way task. Macro F1 is the headline three-way metric because
+  the classes are 800 / 800 / 400.
+- **Hyperparameters.** Linear models pick C from {0.1, 1, 10, 100} by 3-fold stratified CV inside
+  each training split (macro F1). The Random Forest keeps the saved notebook's grid-search result.
+  DistilBERT uses fixed settings (below) with no tuning on test folds.
+- **Seeds.** All randomness uses seed 0.
+
+## Two views of the text
+
+The LLM reviews carry traces of the prompt and of the generation pipeline that have nothing to
+do with how a fake reads to a person: every one starts with one of six fixed clauses and
+contains one of six required phrases, none names a hotel (78.8% of Ott reviews do), every one
+is 88 to 106 words long (Ott: 25 to 784), and about half contain characters that never occur
+in the ASCII-only Ott files (curly apostrophes, "é", long dashes). A detector can score well on
+those traces alone.
+
+- **Raw view:** reviews as written.
+- **Controlled view** (`corpus.controlled_text`, applied identically to all three classes):
+  fold to ASCII, drop the first sentence, delete the six seed phrases, delete hotel names and
+  "Chicago", keep the first 60 words. After this every LLM review is exactly 60 words and the
+  median Ott review is 60 words.
+
+The controlled view is a stricter test, not a cleaned dataset: it removes signal that a real
+detector could legitimately use (for example, real reviews often name the hotel). Reporting both
+shows how much of the raw score depends on these traces.
+
+## Models
+
+1. **Random Forest (notebook features).** The saved notebook's pipeline: lowercase, expand
+   contractions, strip punctuation, WordNet-lemmatize, remove stop words; keep unigrams with count
+   16 or more, and bigrams (count 16 or more) and trigrams (count 10 or more) with positive PMI,
+   all counted on the training split; add the polarity rating and six counts (words, core words,
+   stop words, characters, characters per word, first-person singular pronouns). Forest: 500
+   trees, max depth 20, 5 features per split.
+2. **TF-IDF + logistic regression / linear SVM.** Word unigrams and bigrams, min document
+   frequency 2, sublinear TF, single-letter tokens kept (so "i" counts).
+3. **Lexicon features + logistic regression.** 21 standardized features in seven groups
+   (`src/lexicon.py`): pronouns (first singular, first plural, second, third), function words
+   (articles, prepositions, auxiliaries, conjunctions, negations), affect (positive and negative
+   emotion words, exclamation rate), spatial words, social context words (family, business,
+   trip), length (words, characters, mean word length, sentences, mean sentence length), and
+   diversity (type-token ratio of the first 50 tokens, comma rate). The categories follow LIWC
+   groups that Ott et al. found informative, but the word lists are short open lists written for
+   this repo. They are not LIWC.
+4. **Length only.** The five length features. This is a floor that shows how much a model can do
+   from length alone.
+5. **DistilBERT fine-tune** (`distilbert-base-uncased`, `src/transformer.py`). Max 256 tokens,
+   batch 16, AdamW at 5e-5 with weight decay 0.01, 3 epochs, linear schedule with 10% warmup,
+   gradient clipping at 1.0, last-epoch model evaluated. Trained on Apple MPS. One seed per fold.
+
+## Ablations
+
+Logistic regression on the same folds:
+
+- n-grams only, n-grams plus all lexicon groups, n-grams with pronoun tokens removed from the
+  vocabulary;
+- lexicon features with each group removed in turn, and each group alone.
+
+## Cross-domain check
+
+Train on all positive-polarity reviews, test on all negative ones, and the reverse. For the
+three-way task, the LLM reviews are split by the polarity they were prompted with. This tests
+whether cues learned on one sentiment transfer to the other; it does not test other cities,
+other platforms, or other generators.
+
+## Reproducing the saved notebook
+
+`src/reproduce_notebook.py` repeats the saved bag-of-words notebook exactly: the notebook's row
+order (`data/notebook_row_order.txt`), `train_test_split(test_size=0.2, random_state=0)`, and
+the Random Forest settings. It then repeats the split with seeds 1 to 20. That split is random
+over reviews, so the same hotel appears in train and test, unlike the fold protocol above.
+
+## Limitations
+
+- One generator (GPT-4o-mini), one prompt template, one temperature, one domain (Chicago hotels,
+  reviews collected in 2011 to 2013). Results say nothing about other LLMs or prompts.
+- The LLM reviews were filtered at generation time by a classifier trained on all Ott reviews
+  (`src/review_eval.py`). That filter is part of how the data was made and could make the LLM
+  class easier or harder to separate from crowdsourced fakes.
+- The controlled view removes known artifacts but cannot rule out unknown ones (topic choice
+  driven by the persona list, for example).
+- Bootstrap CIs ignore training variance; DistilBERT was run with one seed.
+- The lexicon is a small open approximation of LIWC categories.
