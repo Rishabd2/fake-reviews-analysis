@@ -1,0 +1,91 @@
+view,class,rank,ngram,coef
+raw,truthful,1,location,2.982
+raw,truthful,2,2,2.233
+raw,truthful,3,rate,2.171
+raw,truthful,4,4,2.145
+raw,truthful,5,small,2.118
+raw,truthful,6,very,1.915
+raw,truthful,7,3,1.88
+raw,truthful,8,no,1.86
+raw,truthful,9,great,1.849
+raw,truthful,10,we,1.806
+raw,truthful,11,reviews,1.716
+raw,truthful,12,concierge,1.706
+raw,truthful,13,priceline,1.693
+raw,truthful,14,is,1.645
+raw,truthful,15,good,1.622
+raw,human_fake,1,chicago,5.688
+raw,human_fake,2,luxury,2.958
+raw,human_fake,3,my,2.902
+raw,human_fake,4,i,2.134
+raw,human_fake,5,when i,2.064
+raw,human_fake,6,and i,1.913
+raw,human_fake,7,hilton,1.911
+raw,human_fake,8,chicago hotel,1.904
+raw,human_fake,9,i will,1.898
+raw,human_fake,10,the food,1.888
+raw,human_fake,11,food,1.832
+raw,human_fake,12,luxurious,1.808
+raw,human_fake,13,when,1.677
+raw,human_fake,14,husband,1.671
+raw,human_fake,15,recently,1.658
+raw,llm_fake,1,lobby,2.719
+raw,llm_fake,2,floor,2.416
+raw,llm_fake,3,view,2.375
+raw,llm_fake,4,overall,2.254
+raw,llm_fake,5,third floor,2.18
+raw,llm_fake,6,the third,2.156
+raw,llm_fake,7,greeted,2.103
+raw,llm_fake,8,third,2.1
+raw,llm_fake,9,room on,2.057
+raw,llm_fake,10,view of,1.967
+raw,llm_fake,11,the lobby,1.903
+raw,llm_fake,12,greeted by,1.816
+raw,llm_fake,13,by,1.77
+raw,llm_fake,14,on the,1.757
+raw,llm_fake,15,felt,1.755
+controlled,truthful,1,2,3.037
+controlled,truthful,2,no,2.518
+controlled,truthful,3,small,2.432
+controlled,truthful,4,good,2.321
+controlled,truthful,5,location,2.275
+controlled,truthful,6,rate,2.185
+controlled,truthful,7,very,2.093
+controlled,truthful,8,night,1.975
+controlled,truthful,9,great,1.914
+controlled,truthful,10,large,1.892
+controlled,truthful,11,concierge,1.87
+controlled,truthful,12,upgraded,1.815
+controlled,truthful,13,called,1.809
+controlled,truthful,14,quiet,1.747
+controlled,truthful,15,walk,1.68
+controlled,human_fake,1,i,3.294
+controlled,human_fake,2,my,2.868
+controlled,human_fake,3,luxury,2.76
+controlled,human_fake,4,luxurious,2.345
+controlled,human_fake,5,food,2.271
+controlled,human_fake,6,their,2.043
+controlled,human_fake,7,the rooms,1.936
+controlled,human_fake,8,this hotel,1.908
+controlled,human_fake,9,rude,1.9
+controlled,human_fake,10,when,1.897
+controlled,human_fake,11,when i,1.867
+controlled,human_fake,12,were very,1.803
+controlled,human_fake,13,amazing,1.791
+controlled,human_fake,14,clerk,1.785
+controlled,human_fake,15,there,1.771
+controlled,llm_fake,1,floor,3.476
+controlled,llm_fake,2,on the,2.835
+controlled,llm_fake,3,view,2.83
+controlled,llm_fake,4,third floor,2.761
+controlled,llm_fake,5,the third,2.753
+controlled,llm_fake,6,third,2.738
+controlled,llm_fake,7,lobby,2.636
+controlled,llm_fake,8,view of,2.591
+controlled,llm_fake,9,the lobby,2.424
+controlled,llm_fake,10,making,2.255
+controlled,llm_fake,11,felt,2.242
+controlled,llm_fake,12,stunning,2.236
+controlled,llm_fake,13,overall,2.132
+controlled,llm_fake,14,which,2.043
+controlled,llm_fake,15,offered,1.991

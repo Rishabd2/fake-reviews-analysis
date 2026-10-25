@@ -33,7 +33,7 @@ MAIN_ORDER = [
 
 
 def load_predictions() -> pd.DataFrame:
-    frames = [pd.read_csv(p) for p in sorted(PRED.glob("*.csv")) if "quick" not in p.name]
+    frames = [pd.read_csv(p) for p in sorted(PRED.glob("*.csv*")) if "quick" not in p.name]
     return pd.concat(frames, ignore_index=True)
 
 
@@ -133,8 +133,9 @@ def main() -> None:
 
     # Cross-domain
     lines += ["", "## Cross-domain: train on one polarity, test on the other", "",
-              "| Task | View | Model | Positive to negative: acc / macro F1 | Negative to positive: acc / macro F1 |",
-              "| --- | --- | --- | --- | --- |"]
+              "| Task | View | Model | Positive to negative: acc / macro F1 | Negative to positive: acc / macro F1 "
+              "| LLM recall, pos to neg / neg to pos |",
+              "| --- | --- | --- | --- | --- | --- |"]
     for task in ("binary", "three_way"):
         for view in ("raw", "controlled"):
             v = summary.get(task, {}).get(view, {})
@@ -142,7 +143,11 @@ def main() -> None:
             for m in ordered(set(pn) | set(np_)):
                 c1 = f"{fmt(pn[m]['metrics']['accuracy'])} / {fmt(pn[m]['metrics']['macro_f1'])}" if m in pn else ""
                 c2 = f"{fmt(np_[m]['metrics']['accuracy'])} / {fmt(np_[m]['metrics']['macro_f1'])}" if m in np_ else ""
-                lines.append(f"| {task} | {view} | {m} | {c1} | {c2} |")
+                c3 = ""
+                if task == "three_way" and m in pn and m in np_:
+                    c3 = (f"{100 * pn[m]['per_class_recall']['llm_fake']:.1f} / "
+                          f"{100 * np_[m]['per_class_recall']['llm_fake']:.1f}")
+                lines.append(f"| {task} | {view} | {m} | {c1} | {c2} | {c3} |")
 
     (RESULTS / "tables.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))

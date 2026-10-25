@@ -74,7 +74,7 @@ def test_bootstrap_interval_contains_point():
 
 def test_committed_summary_consistent_with_predictions():
     summary_path = ROOT / "results" / "summary.json"
-    preds = sorted((ROOT / "results" / "predictions").glob("*.csv"))
+    preds = sorted((ROOT / "results" / "predictions").glob("*.csv*"))
     if not summary_path.exists() or not preds:
         pytest.skip("results not generated")
     summary = json.loads(summary_path.read_text())

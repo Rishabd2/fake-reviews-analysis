@@ -24,3 +24,4 @@ data/cached_dataset.pkl
 .vscode/
 *.swp
 data/cache/
+results/predictions/*quick*

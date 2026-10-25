@@ -7,7 +7,7 @@ Cross-domain: train on one polarity (all folds), test on the other.
     python src/run_experiments.py            # everything
     python src/run_experiments.py --quick    # main models only, raw view
 
-Writes results/predictions/classical.csv (no review text, only file ids).
+Writes results/predictions/classical.csv.gz (no review text, only file ids).
 """
 
 from __future__ import annotations
@@ -84,7 +84,7 @@ def main() -> None:
                     print(f"{task:9s} {view:10s} {src[:3]}->{dst[:3]} {name:42s} acc={acc:.3f}")
 
     PRED_DIR.mkdir(parents=True, exist_ok=True)
-    path = PRED_DIR / ("classical_quick.csv" if args.quick else "classical.csv")
+    path = PRED_DIR / ("classical_quick.csv.gz" if args.quick else "classical.csv.gz")
     pd.concat(out, ignore_index=True).to_csv(path, index=False)
     print("wrote", path)
 

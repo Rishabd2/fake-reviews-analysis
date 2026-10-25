@@ -74,7 +74,7 @@ def hero(summary):
     bars(ax, [t["raw"]["cv"], t["controlled"]["cv"]], None, [BLUE, ORANGE],
          ["reviews as written", "prompt artifacts removed"], "macro_f1")
     ax.axhline(100 / 3, color=MUTED, ls="--", lw=1)
-    ax.text(5.45, 100 / 3 + 1, "chance", color=MUTED, fontsize=8, ha="right")
+    ax.text(0.99, 100 / 3 + 1, "chance", color=MUTED, fontsize=8, ha="right", transform=ax.get_yaxis_transform())
     ax.set_ylim(0, 108)
     ax.set_ylabel("Macro F1 (%), 5-fold CV, 95% CI")
     ax.set_title("Truthful vs crowdsourced fake vs GPT-4o-mini fake (n = 2,000)")
@@ -89,7 +89,8 @@ def binary(summary, repro):
     fig, ax = plt.subplots(figsize=(9, 4))
     bars(ax, [b], None, [BLUE], [None], "accuracy")
     ax.axhline(90.3, color=ORANGE, ls="--", lw=1)
-    ax.text(5.45, 91, "saved notebook, single 80/20 split: 90.3", color=INK, fontsize=8, ha="right")
+    ax.text(0.99, 91, "saved notebook, single 80/20 split: 90.3", color=INK, fontsize=8, ha="right",
+            transform=ax.get_yaxis_transform())
     ax.axhline(50, color=MUTED, ls=":", lw=1)
     ax.set_ylim(40, 105)
     ax.set_ylabel("Accuracy (%), 5-fold CV, 95% CI")
