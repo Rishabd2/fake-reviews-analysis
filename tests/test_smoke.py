@@ -85,3 +85,12 @@ def test_committed_summary_consistent_with_predictions():
     stored = summary["three_way"]["raw"]["cv"][name]["metrics"]["accuracy"]["value"]
     assert acc == pytest.approx(stored)
     assert len(g) == 2000
+
+
+def test_controlled_caps_are_class_independent():
+    df = corpus.apply_view(corpus.load_llm().assign(y=2), "controlled")
+    lengths = df["text"].str.split().str.len()
+    assert lengths.between(corpus.CONTROLLED_MIN_WORDS, corpus.CONTROLLED_MAX_WORDS).all()
+    assert lengths.nunique() > 20
+    caps = [corpus.controlled_cap(f"x/{i}.txt") for i in range(500)]
+    assert min(caps) == corpus.CONTROLLED_MIN_WORDS and max(caps) == corpus.CONTROLLED_MAX_WORDS

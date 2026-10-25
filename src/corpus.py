@@ -12,6 +12,7 @@ so they are assigned to folds round-robin by file number.
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 from pathlib import Path
@@ -59,6 +60,10 @@ _ASCII = {"\u2018": "'", "\u2019": "'", "\u201c": '"', "\u201d": '"',
           "\u2014": ", ", "\u2013": "-", "\u00e9": "e"}
 
 CONTROLLED_MAX_WORDS = 60
+# Per-review word cap in the controlled view: drawn uniformly from 30..60 by a hash of the
+# file id, so the cap does not depend on the class and LLM reviews are not all 60 words.
+CONTROLLED_MIN_WORDS = 30
+PLACEHOLDER = " X "
 
 
 def ott_dir() -> Path:
@@ -126,8 +131,9 @@ def controlled_text(text: str, max_words: int = CONTROLLED_MAX_WORDS) -> str:
 
     0. Fold characters to ASCII (Ott v1.4 has none outside ASCII; the LLM text does).
     1. Drop the first sentence (the LLM reviews all open with one of six fixed clauses).
-    2. Delete the six seed phrases the prompt required.
-    3. Delete hotel names and "Chicago" (Ott reviews name hotels, LLM reviews do not).
+    2. Replace the six seed phrases the prompt required with the placeholder "X".
+    3. Replace hotel names and "Chicago" with the same placeholder (Ott reviews name hotels,
+       LLM reviews do not), so every class gets an "X" where something was removed.
     4. Keep the first `max_words` words (LLM output was capped at 110 words).
     """
     for src, dst in _ASCII.items():
@@ -135,17 +141,23 @@ def controlled_text(text: str, max_words: int = CONTROLLED_MAX_WORDS) -> str:
     text = text.encode("ascii", "ignore").decode()
     sentences = _SENT_RE.split(text.strip())
     body = " ".join(sentences[1:]) if len(sentences) > 1 else text
-    body = _SEED_RE.sub(" ", body)
-    body = _NAME_RE.sub(" ", body)
+    body = _SEED_RE.sub(PLACEHOLDER, body)
+    body = _NAME_RE.sub(PLACEHOLDER, body)
     words = body.split()
     return " ".join(words[:max_words])
+
+
+def controlled_cap(source: str) -> int:
+    """Class-independent word cap for one review, fixed by its file id."""
+    h = int(hashlib.md5(source.encode("utf-8")).hexdigest(), 16)
+    return CONTROLLED_MIN_WORDS + h % (CONTROLLED_MAX_WORDS - CONTROLLED_MIN_WORDS + 1)
 
 
 def apply_view(df: pd.DataFrame, view: str) -> pd.DataFrame:
     """view is 'raw' or 'controlled'."""
     out = df.copy()
     if view == "controlled":
-        out["text"] = out["text"].map(controlled_text)
+        out["text"] = [controlled_text(t, controlled_cap(s)) for t, s in zip(out["text"], out["source"])]
     elif view != "raw":
         raise ValueError(view)
     return out
