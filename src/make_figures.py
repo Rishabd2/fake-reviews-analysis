@@ -129,7 +129,9 @@ def confusions(summary):
 def ablation(summary):
     cols = [("binary", "raw", "binary, raw", BLUE), ("three_way", "raw", "three-way, raw", ORANGE),
             ("three_way", "controlled", "three-way, controlled", AQUA)]
-    names = list(summary["binary"]["raw"]["ablation"].keys())
+    from models import ablations
+
+    names = list(ablations())
     fig, ax = plt.subplots(figsize=(9, 0.32 * len(names) * 3 + 1))
     y = np.arange(len(names))
     h = 0.27

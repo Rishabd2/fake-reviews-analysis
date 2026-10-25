@@ -96,7 +96,9 @@ def main() -> None:
                   f"range {100 * o['min']:.1f} to {100 * o['max']:.1f} | | |"]
 
     # Three-way
-    for view, title in (("raw", "reviews as written"), ("controlled", "prompt artifacts removed")):
+    for view, title in (("raw", "reviews as written"), ("controlled", "prompt artifacts removed"),
+                        ("controlled_no_prompt_words",
+                         "controlled view plus floor/view/lobby deleted (src/prompt_word_check.py)")):
         t = summary.get("three_way", {}).get(view, {}).get("cv", {})
         if not t:
             continue
@@ -123,9 +125,9 @@ def main() -> None:
               "| Features | Binary, raw | Three-way, raw | Three-way, controlled |", "| --- | --- | --- | --- |"]
     abl = {(task, view): summary.get(task, {}).get(view, {}).get("ablation", {})
            for task, view in (("binary", "raw"), ("three_way", "raw"), ("three_way", "controlled"))}
-    names = list(next((v for v in abl.values() if v), {}).keys())
-    order = [n for n in names if not n.startswith("lexicon")] + [n for n in names if n.startswith("lexicon")]
-    for n in order:
+    from models import ablations
+
+    for n in ablations():
         cells = [fmt(abl[k][n]["metrics"]["macro_f1"]) if n in abl[k] else "" for k in abl]
         lines.append(f"| {n} | " + " | ".join(cells) + " |")
 
