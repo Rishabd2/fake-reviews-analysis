@@ -103,6 +103,10 @@ three-way task, the LLM reviews are split by the polarity they were prompted wit
 whether cues learned on one sentiment transfer to the other; it does not test other cities,
 other platforms, or other generators.
 
+The classical models run the cross-domain check for both tasks and both views. DistilBERT was
+not run on it (`src/transformer.py --setting cross_domain` supports it). For the binary task
+DistilBERT was run on the fold-5 split only.
+
 ## Reproducing the saved notebook
 
 `src/reproduce_notebook.py` repeats the saved bag-of-words notebook exactly: the notebook's row
