@@ -13,6 +13,7 @@ Precision, recall, and F1 are for the deceptive class.
 | TF-IDF 1-2 gram + linear SVM | 88.8 [87.2, 90.3] | 89.9 [87.8, 92.0] | 87.2 [84.8, 89.7] | 88.6 [86.9, 90.2] | 88.8 (3.0) | 92.2 [89.1, 95.0] |
 | Lexicon features + logistic regression | 74.0 [71.9, 76.2] | 73.6 [70.4, 76.5] | 74.9 [71.9, 77.8] | 74.2 [71.8, 76.6] | 74.0 (1.9) | 75.6 [70.6, 80.3] |
 | Length only + logistic regression | 61.5 [59.1, 63.9] | 60.2 [56.8, 63.2] | 68.1 [64.9, 71.4] | 63.9 [61.1, 66.5] | 61.5 (1.6) | 59.4 [54.1, 64.7] |
+| DistilBERT fine-tune | not run | | | | | 89.1 [85.6, 92.5] |
 
 Notebook protocol re-run (`python src/reproduce_notebook.py`): one random 80/20 split, n_test=320, Random Forest with the notebook's settings.
 
@@ -31,6 +32,7 @@ Notebook protocol re-run (`python src/reproduce_notebook.py`): one random 80/20 
 | TF-IDF 1-2 gram + linear SVM | 91.1 [89.8, 92.3] | 92.6 [91.6, 93.6] | 92.6 [91.6, 93.6] | 92.6 [91.5, 93.6] | 90.6 | 87.1 | 100.0 |
 | Lexicon features + logistic regression | 75.6 [73.6, 77.5] | 77.7 [75.8, 79.4] | 78.9 [77.1, 80.5] | 78.2 [76.5, 79.8] | 69.2 | 72.4 | 95.0 |
 | Length only + logistic regression | 55.9 [53.4, 58.0] | 56.2 [53.7, 58.4] | 56.0 [53.5, 58.3] | 55.9 [53.4, 58.1] | 54.0 | 57.2 | 56.8 |
+| DistilBERT fine-tune | 90.8 [89.5, 92.0] | 92.3 [91.3, 93.3] | 92.3 [91.3, 93.3] | 92.3 [91.3, 93.3] | 86.4 | 90.6 | 100.0 |
 
 ## Three-way: truthful / crowdsourced fake / LLM fake, prompt artifacts removed (n=2,000)
 
@@ -41,6 +43,7 @@ Notebook protocol re-run (`python src/reproduce_notebook.py`): one random 80/20 
 | TF-IDF 1-2 gram + linear SVM | 81.8 [80.2, 83.5] | 84.8 [83.4, 86.1] | 84.8 [83.4, 86.1] | 84.8 [83.4, 86.1] | 75.9 | 78.8 | 99.8 |
 | Lexicon features + logistic regression | 71.0 [69.2, 72.9] | 73.6 [71.9, 75.5] | 74.8 [73.1, 76.4] | 74.2 [72.5, 75.9] | 63.6 | 67.1 | 93.5 |
 | Length only + logistic regression | 58.4 [56.2, 60.6] | 59.0 [56.9, 61.2] | 60.2 [58.0, 62.4] | 59.3 [57.2, 61.4] | 51.6 | 59.6 | 69.2 |
+| DistilBERT fine-tune | 84.2 [82.7, 85.8] | 87.1 [85.9, 88.4] | 86.8 [85.5, 88.1] | 86.7 [85.4, 88.0] | 73.0 | 87.4 | 100.0 |
 
 ## Three-way: truthful / crowdsourced fake / LLM fake, controlled view plus floor/view/lobby deleted (src/prompt_word_check.py) (n=2,000)
 

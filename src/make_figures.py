@@ -85,7 +85,7 @@ def hero(summary):
 
 
 def binary(summary, repro):
-    b = summary["binary"]["raw"]["cv"]
+    b = {m: v for m, v in summary["binary"]["raw"]["cv"].items() if len(v["fold_accuracy"]) == 5}
     fig, ax = plt.subplots(figsize=(9, 4))
     bars(ax, [b], None, [BLUE], [None], "accuracy")
     ax.axhline(90.3, color=ORANGE, ls="--", lw=1)

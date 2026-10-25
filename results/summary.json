@@ -2890,6 +2890,102 @@
     }
    },
    "cv": {
+    "DistilBERT fine-tune": {
+     "n": 320,
+     "metrics": {
+      "accuracy": {
+       "value": 0.890625,
+       "ci_low": 0.85625,
+       "ci_high": 0.925
+      },
+      "macro_precision": {
+       "value": 0.8913741145160659,
+       "ci_low": 0.857876847992741,
+       "ci_high": 0.9250670275182267
+      },
+      "macro_recall": {
+       "value": 0.890625,
+       "ci_low": 0.8560445649133696,
+       "ci_high": 0.925
+      },
+      "macro_f1": {
+       "value": 0.8905726372971441,
+       "ci_low": 0.8555673299580047,
+       "ci_high": 0.9248571253307352
+      },
+      "precision": {
+       "value": 0.874251497005988,
+       "ci_low": 0.8232035776849481,
+       "ci_high": 0.9209116589625064
+      },
+      "recall": {
+       "value": 0.9125,
+       "ci_low": 0.8670423892100193,
+       "ci_high": 0.9562567934782609
+      },
+      "f1": {
+       "value": 0.892966360856269,
+       "ci_low": 0.8553459119496857,
+       "ci_high": 0.9263837981928301
+      }
+     },
+     "confusion": [
+      [
+       139,
+       21
+      ],
+      [
+       14,
+       146
+      ]
+     ],
+     "per_class_recall": {
+      "truthful": 0.86875,
+      "human_fake": 0.9125
+     },
+     "fold_accuracy": [
+      0.890625
+     ],
+     "fold_accuracy_mean": 0.890625,
+     "fold_accuracy_std": null,
+     "fold5_holdout": {
+      "accuracy": {
+       "value": 0.890625,
+       "ci_low": 0.85625,
+       "ci_high": 0.925
+      },
+      "macro_precision": {
+       "value": 0.8913741145160659,
+       "ci_low": 0.857876847992741,
+       "ci_high": 0.9250670275182267
+      },
+      "macro_recall": {
+       "value": 0.890625,
+       "ci_low": 0.8560445649133696,
+       "ci_high": 0.925
+      },
+      "macro_f1": {
+       "value": 0.8905726372971441,
+       "ci_low": 0.8555673299580047,
+       "ci_high": 0.9248571253307352
+      },
+      "precision": {
+       "value": 0.874251497005988,
+       "ci_low": 0.8232035776849481,
+       "ci_high": 0.9209116589625064
+      },
+      "recall": {
+       "value": 0.9125,
+       "ci_low": 0.8670423892100193,
+       "ci_high": 0.9562567934782609
+      },
+      "f1": {
+       "value": 0.892966360856269,
+       "ci_low": 0.8553459119496857,
+       "ci_high": 0.9263837981928301
+      }
+     }
+    },
     "Length only + logistic regression": {
      "n": 1600,
      "metrics": {
@@ -4680,6 +4776,84 @@
     }
    },
    "cv": {
+    "DistilBERT fine-tune": {
+     "n": 2000,
+     "metrics": {
+      "accuracy": {
+       "value": 0.8415,
+       "ci_low": 0.8265,
+       "ci_high": 0.8575
+      },
+      "macro_precision": {
+       "value": 0.8713368487869718,
+       "ci_low": 0.8585244300021709,
+       "ci_high": 0.8844199660721079
+      },
+      "macro_recall": {
+       "value": 0.8679166666666666,
+       "ci_low": 0.8554065192442648,
+       "ci_high": 0.8811216981864046
+      },
+      "macro_f1": {
+       "value": 0.8667531005775971,
+       "ci_low": 0.8540147446284465,
+       "ci_high": 0.8803381880974958
+      }
+     },
+     "confusion": [
+      [
+       584,
+       216,
+       0
+      ],
+      [
+       99,
+       699,
+       2
+      ],
+      [
+       0,
+       0,
+       400
+      ]
+     ],
+     "per_class_recall": {
+      "truthful": 0.73,
+      "human_fake": 0.87375,
+      "llm_fake": 1.0
+     },
+     "fold_accuracy": [
+      0.8425,
+      0.84,
+      0.8375,
+      0.845,
+      0.8425
+     ],
+     "fold_accuracy_mean": 0.8415000000000001,
+     "fold_accuracy_std": 0.0028504385627478378,
+     "fold5_holdout": {
+      "accuracy": {
+       "value": 0.8425,
+       "ci_low": 0.8075,
+       "ci_high": 0.8775
+      },
+      "macro_precision": {
+       "value": 0.8705418719211823,
+       "ci_low": 0.8427751685714634,
+       "ci_high": 0.8981340926912336
+      },
+      "macro_recall": {
+       "value": 0.86875,
+       "ci_low": 0.8413748024116273,
+       "ci_high": 0.8967753222857675
+      },
+      "macro_f1": {
+       "value": 0.8684609738194274,
+       "ci_low": 0.8403665967027419,
+       "ci_high": 0.8964135811891661
+      }
+     }
+    },
     "Length only + logistic regression": {
      "n": 2000,
      "metrics": {
@@ -6384,6 +6558,84 @@
     }
    },
    "cv": {
+    "DistilBERT fine-tune": {
+     "n": 2000,
+     "metrics": {
+      "accuracy": {
+       "value": 0.908,
+       "ci_low": 0.8955,
+       "ci_high": 0.92
+      },
+      "macro_precision": {
+       "value": 0.9233595882083634,
+       "ci_low": 0.9128391374137254,
+       "ci_high": 0.9332471368623528
+      },
+      "macro_recall": {
+       "value": 0.9233333333333333,
+       "ci_low": 0.9130508534611317,
+       "ci_high": 0.9330009440560317
+      },
+      "macro_f1": {
+       "value": 0.923070518019288,
+       "ci_low": 0.9125514470031593,
+       "ci_high": 0.932851588382836
+      }
+     },
+     "confusion": [
+      [
+       691,
+       109,
+       0
+      ],
+      [
+       74,
+       725,
+       1
+      ],
+      [
+       0,
+       0,
+       400
+      ]
+     ],
+     "per_class_recall": {
+      "truthful": 0.86375,
+      "human_fake": 0.90625,
+      "llm_fake": 1.0
+     },
+     "fold_accuracy": [
+      0.8875,
+      0.895,
+      0.92,
+      0.925,
+      0.9125
+     ],
+     "fold_accuracy_mean": 0.908,
+     "fold_accuracy_std": 0.016143884290962966,
+     "fold5_holdout": {
+      "accuracy": {
+       "value": 0.9125,
+       "ci_low": 0.885,
+       "ci_high": 0.94
+      },
+      "macro_precision": {
+       "value": 0.9262756908955739,
+       "ci_low": 0.9023175489392833,
+       "ci_high": 0.9492340503618798
+      },
+      "macro_recall": {
+       "value": 0.9270833333333334,
+       "ci_low": 0.9041610691373229,
+       "ci_high": 0.9489618688114931
+      },
+      "macro_f1": {
+       "value": 0.9258863427390946,
+       "ci_low": 0.9025427936197681,
+       "ci_high": 0.9485750188847261
+      }
+     }
+    },
     "Length only + logistic regression": {
      "n": 2000,
      "metrics": {

@@ -47,7 +47,7 @@ def summarize_group(g: pd.DataFrame, task: str) -> dict:
         accs = [float((h["pred"] == h["y"]).mean()) for _, h in g.groupby("fold")]
         out["fold_accuracy"] = accs
         out["fold_accuracy_mean"] = float(np.mean(accs))
-        out["fold_accuracy_std"] = float(np.std(accs, ddof=1))
+        out["fold_accuracy_std"] = float(np.std(accs, ddof=1)) if len(accs) > 1 else None
         f5 = g[g["fold"] == 5]
         out["fold5_holdout"] = bootstrap(f5["y"].to_numpy(), f5["pred"].to_numpy(),
                                          positive=1 if task == "binary" else None)
@@ -80,6 +80,9 @@ def main() -> None:
     for m in ordered(b):
         s = b[m]
         mm = s["metrics"]
+        if len(s["fold_accuracy"]) < 5:  # only the fold-5 split was run
+            lines.append(f"| {m} | not run | | | | | {fmt(s['fold5_holdout']['accuracy'])} |")
+            continue
         lines.append(f"| {m} | {fmt(mm['accuracy'])} | {fmt(mm['precision'])} | {fmt(mm['recall'])} | "
                      f"{fmt(mm['f1'])} | {100 * s['fold_accuracy_mean']:.1f} ({100 * s['fold_accuracy_std']:.1f}) | "
                      f"{fmt(s['fold5_holdout']['accuracy'])} |")
