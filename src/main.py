@@ -7,7 +7,7 @@ from generator import generate_fake_reviews
 from review_eval import evaluate_reviews
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-OUT_DIR = BASE_DIR / "data" / "generated"
+OUT_DIR = BASE_DIR / "data" / "llm_generated"  # overwrites the committed reviews
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -19,7 +19,7 @@ def save_individual_files(reviews: list[str], polarity: str) -> None:
         path.write_text(review + "\n", encoding="utf-8")
 
 
-def gen_refine_save(polarity: str, n: int = 20) -> None:
+def gen_refine_save(polarity: str, n: int = 200) -> None:
     truthful_texts = [
         r["review"] for r in load_dataset() if r["truthfulness"] == "truthful"
     ]
