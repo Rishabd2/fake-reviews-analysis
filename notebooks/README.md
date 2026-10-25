@@ -1,6 +1,6 @@
 # Notebooks
 
-These are the original runs, copied from local work. Paths inside still assume the older `Chicago_Hotel_Review/` layout. After you download Ott v1.4, either recreate that folder or change the import to `data_prep.import_chi_review(os.environ["OP_SPAM_DIR"])`.
+These are the original analysis notebooks, copied from local work. Their output cells were cleared because they printed corpus text (the Ott corpus is CC BY-NC-SA 3.0); the scores they printed are recorded in `results/metrics.json`, and `src/reproduce_notebook.py` re-runs the bag-of-words result. Paths inside still assume the older `Chicago_Hotel_Review/` layout. After you download Ott v1.4, either recreate that folder or change the import to `data_prep.import_chi_review(os.environ["OP_SPAM_DIR"])`.
 
 | File | What it did |
 | --- | --- |
