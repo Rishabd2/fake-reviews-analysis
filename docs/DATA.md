@@ -55,7 +55,7 @@ here from the original working folder with the same prompt logic), with these se
   a higher temperature if mean P(deceptive) exceeded 0.5. No hotel name is given to the model.
 
 The files are byte-identical to the `fake_reviews_dataset/` folder (and its two zips) in the
-original working directory. Nothing was edited, filtered, or added after generation. The prompt
+original working directory. Nothing was edited or added after generation. The files are what the pipeline saved, which includes the `review_eval.py` check above: it could have replaced a whole batch with a regenerated one, and the logs that would say whether it did were not kept. The prompt
 leaves visible traces that a detector can use, and `docs/methodology.md` describes the
 "controlled" view that removes them:
 
