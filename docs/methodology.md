@@ -56,9 +56,16 @@ those traces alone.
 
 - **Raw view:** reviews as written.
 - **Controlled view** (`corpus.controlled_text`, applied identically to all three classes):
-  fold to ASCII, drop the first sentence, delete the six seed phrases, delete hotel names and
-  "Chicago", keep the first 60 words. After this every LLM review is exactly 60 words and the
-  median Ott review is 60 words.
+  fold to ASCII, drop the first sentence, replace the six seed phrases and all hotel names and
+  "Chicago" with the same placeholder token "X" (so no class is left with grammatical holes the
+  others lack), then keep the first N words, where N is drawn uniformly from 30 to 60 by an MD5
+  hash of the file id. The cap does not depend on the class, so LLM reviews no longer share one
+  length. Mean controlled length is 43.6 words for truthful, 43.7 for crowdsourced, and 44.9 for
+  LLM reviews; the only remaining length signal is that some Ott reviews are shorter than their
+  cap (minimum 1 word) while every LLM review reaches it. The "length only" model measures what
+  that residual is worth. The placeholder itself is not perfectly balanced: every LLM review
+  contained a required seed phrase, while 78.8% of Ott reviews name a hotel, so "x" appears among
+  the top LLM coefficients (`results/top_ngrams.csv`).
 
 The controlled view is a stricter test, not a cleaned dataset: it removes signal that a real
 detector could legitimately use (for example, real reviews often name the hotel). Reporting both
@@ -123,5 +130,7 @@ over reviews, so the same hotel appears in train and test, unlike the fold proto
   class easier or harder to separate from crowdsourced fakes.
 - The controlled view removes known artifacts but cannot rule out unknown ones (topic choice
   driven by the persona list, for example).
+- LLM prompts named no hotel; Mechanical Turk workers were given one (Ott et al.), so hotel
+  names are a collection difference, not a stylistic one.
 - Bootstrap CIs ignore training variance; DistilBERT was run with one seed.
 - The lexicon is a small open approximation of LIWC categories.

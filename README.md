@@ -2,7 +2,7 @@
 
 Can a detector tell a real hotel review from a fake written by a paid crowd worker, and from a fake written by an LLM? This repo builds a three-way detector (truthful / crowdsourced fake / GPT-4o-mini fake) on the Ott Deceptive Opinion Spam corpus plus 400 GPT-4o-mini reviews, under hotel-disjoint 5-fold cross-validation.
 
-**Result.** TF-IDF logistic regression reaches **92.7% macro F1** (95% CI 91.7 to 93.7) on the three-way task, and a fine-tuned DistilBERT reaches 92.3 (91.3 to 93.3). GPT-4o-mini reviews are the easy class: 400 of 400 are recalled. The hard pair is still truthful vs crowdsourced fake: 9% of truthful reviews are called crowdsourced and 12.5% of crowdsourced fakes are called truthful. After removing the traces the generation prompt left (fixed openings, required phrases, no hotel names, fixed length, non-ASCII characters), macro F1 drops to 85.0 (83.6 to 86.3) for logistic regression and 86.7 (85.4 to 88.0) for DistilBERT, while LLM recall stays at 99.5% and 100%. The drop comes from the truthful vs crowdsourced pair, which also falls on its own under the same edits (binary accuracy 89.2 to 77.8). LLM detection learned on one sentiment transfers only partly to the other (LLM recall 59.5% training on positive and testing on negative).
+**Result.** TF-IDF logistic regression reaches **92.7% macro F1** (95% CI 91.7 to 93.7) on the three-way task, and a fine-tuned DistilBERT reaches 92.3 (91.3 to 93.3). GPT-4o-mini reviews are the easy class: 400 of 400 are recalled. The hard pair is still truthful vs crowdsourced fake: 9% of truthful reviews are called crowdsourced and 12.5% of crowdsourced fakes are called truthful. After removing the traces the generation prompt left (fixed openings, required phrases, no hotel names, fixed length, non-ASCII characters), macro F1 drops to 82.3 (80.8 to 83.7) for logistic regression and 84.7 (83.3 to 86.0) for DistilBERT, while LLM recall stays at 98.8% and 99.8%. Most of the drop comes from the truthful vs crowdsourced pair, which also falls on its own under the same edits (binary accuracy 89.2 to 73.8). Resampling the 20 hotels instead of single reviews widens the CIs only slightly (logistic regression, raw: 91.5 to 94.0). LLM detection learned on one sentiment transfers only partly to the other (LLM recall 59.5% training on positive and testing on negative).
 
 ![Three-way macro F1 by model, raw and controlled text](results/figures/three_way_macro_f1.png)
 
@@ -20,15 +20,15 @@ All numbers come from `results/tables.md` (written by `python src/summarize.py`)
 | Lexicon features + logistic regression | as written | 75.6 [73.6, 77.5] | 78.2 [76.5, 79.8] | 69.2 | 72.4 | 95.0 |
 | DistilBERT fine-tune | as written | 90.8 [89.5, 92.0] | 92.3 [91.3, 93.3] | 86.4 | 90.6 | 100.0 |
 | Length only + logistic regression | as written | 55.9 [53.4, 58.0] | 55.9 [53.4, 58.1] | 54.0 | 57.2 | 56.8 |
-| TF-IDF 1-2 gram + logistic regression | controlled | 82.0 [80.4, 83.7] | 85.0 [83.6, 86.3] | 76.5 | 78.8 | 99.5 |
-| TF-IDF 1-2 gram + linear SVM | controlled | 81.8 [80.2, 83.5] | 84.8 [83.4, 86.1] | 75.9 | 78.8 | 99.8 |
-| Random Forest (notebook features) | controlled | 79.5 [77.6, 81.2] | 82.8 [81.4, 84.2] | 71.1 | 77.6 | 99.8 |
-| Lexicon features + logistic regression | controlled | 71.0 [69.2, 72.9] | 74.2 [72.5, 75.9] | 63.6 | 67.1 | 93.5 |
-| DistilBERT fine-tune | controlled | 84.2 [82.7, 85.8] | 86.7 [85.4, 88.0] | 73.0 | 87.4 | 100.0 |
-| Length only + logistic regression | controlled | 58.4 [56.2, 60.6] | 59.3 [57.2, 61.4] | 51.6 | 59.6 | 69.2 |
-| TF-IDF 1-2 gram + logistic regression | controlled, floor/view/lobby also deleted | 81.8 [80.1, 83.5] | 84.8 [83.4, 86.1] | 76.4 | 78.5 | 99.5 |
+| TF-IDF 1-2 gram + logistic regression | controlled | 78.9 [77.0, 80.7] | 82.3 [80.8, 83.7] | 72.2 | 75.6 | 98.8 |
+| TF-IDF 1-2 gram + linear SVM | controlled | 79.5 [77.8, 81.2] | 82.8 [81.3, 84.2] | 72.5 | 76.6 | 99.2 |
+| Random Forest (notebook features) | controlled | 76.8 [75.0, 78.6] | 80.4 [78.9, 81.9] | 70.8 | 73.0 | 96.8 |
+| Lexicon features + logistic regression | controlled | 67.3 [65.3, 69.4] | 70.4 [68.5, 72.3] | 60.4 | 64.4 | 87.2 |
+| DistilBERT fine-tune | controlled | 81.9 [80.2, 83.5] | 84.7 [83.3, 86.0] | 70.4 | 84.5 | 99.8 |
+| Length only + logistic regression | controlled | 49.4 [47.2, 51.5] | 47.1 [44.8, 49.3] | 49.6 | 57.9 | 32.0 |
+| TF-IDF 1-2 gram + logistic regression | controlled, floor/view/lobby also deleted | 79.4 [77.6, 81.2] | 82.7 [81.2, 84.1] | 72.8 | 76.5 | 98.5 |
 
-"Controlled" applies the same edits to every class: fold to ASCII, drop the first sentence, delete the six prompt seed phrases and all hotel names, keep the first 60 words. The last row also deletes "floor", "view", and "lobby", the words the prompt suggested as spatial details. In the controlled view the largest LLM coefficients are those words and phrases built on them ("third floor", "the lobby"), followed by "stunning", "making", "felt", and "overall" (`results/top_ngrams.csv`).
+"Controlled" applies the same edits to every class: fold to ASCII, drop the first sentence, replace the six prompt seed phrases and all hotel names with one shared placeholder ("X"), and cut each review to a cap of 30 to 60 words drawn from a hash of its file id, so the cap does not depend on the class. The length-only model falls to 47.1 macro F1 with 32.0% LLM recall, so length no longer identifies LLM reviews. The last row also deletes "floor", "view", and "lobby", the words the prompt suggested as spatial details. In the controlled view the largest LLM coefficients are those words and phrases built on them ("third floor", "the lobby"), then "felt", "stunning", "making", and the placeholder "x" (every LLM review had a required seed phrase; 78.8% of Ott reviews name a hotel) (`results/top_ngrams.csv`).
 
 ![Confusion matrices](results/figures/confusion_matrices.png)
 
@@ -57,15 +57,15 @@ Logistic regression, macro F1. Full table in `results/tables.md`.
 
 | Features | Binary | Three-way | Three-way, controlled |
 | --- | --- | --- | --- |
-| n-grams only | 89.2 | 92.7 | 85.0 |
-| n-grams + all lexicon groups | 87.5 | 91.2 | 84.5 |
-| n-grams with pronoun tokens removed | 87.9 | 92.5 | 84.6 |
-| lexicon, all groups | 74.0 | 78.2 | 74.2 |
-| lexicon without pronouns | 69.7 | 75.1 | 72.9 |
-| lexicon without spatial | 70.4 | 75.0 | 70.0 |
-| lexicon without length | 71.4 | 76.4 | 69.1 |
-| lexicon, pronouns only | 64.5 | 47.6 | 38.4 |
-| lexicon, spatial only | 67.3 | 46.6 | 45.8 |
+| n-grams only | 89.2 | 92.7 | 82.3 |
+| n-grams + all lexicon groups | 87.5 | 91.2 | 80.6 |
+| n-grams with pronoun tokens removed | 87.9 | 92.5 | 81.4 |
+| lexicon, all groups | 74.0 | 78.2 | 70.4 |
+| lexicon without pronouns | 69.7 | 75.1 | 67.4 |
+| lexicon without spatial | 70.4 | 75.0 | 67.1 |
+| lexicon without length | 71.4 | 76.4 | 67.1 |
+| lexicon, pronouns only | 64.5 | 47.6 | 36.6 |
+| lexicon, spatial only | 67.3 | 46.6 | 48.6 |
 
 Pronouns and spatial words carry the most lexicon signal for truthful vs crowdsourced, in line with Ott et al.; on their own they separate the three classes poorly (macro F1 47.6 and 46.6). Adding the lexicon features to n-grams does not improve on n-grams alone.
 
@@ -152,6 +152,7 @@ docs/                    DATA.md, methodology.md, third_party.md
 ## Limitations
 
 - One generator (GPT-4o-mini), one prompt template, one temperature, one domain (Chicago hotels, Ott reviews from 2011 to 2013). Near-perfect LLM recall here is a statement about this generator and prompt, not about LLM text in general.
+- LLM prompts named no hotel; Mechanical Turk workers were given one.
 - The prompt's fixed structure is the main reason the LLM class is easy. The controlled view removes the known traces, but persona-driven topics and the model's own phrasing remain.
 - The LLM reviews were screened at generation time by a classifier fit on all Ott reviews (`src/review_eval.py`).
 - CIs reflect test-set sampling, not training variance across seeds. DistilBERT was trained once per fold with seed 0; MPS kernels are not bit-for-bit deterministic.
