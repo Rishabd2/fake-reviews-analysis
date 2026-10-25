@@ -44,48 +44,48 @@ raw,llm_fake,12,greeted by,1.816
 raw,llm_fake,13,by,1.77
 raw,llm_fake,14,on the,1.757
 raw,llm_fake,15,felt,1.755
-controlled,truthful,1,2,3.037
-controlled,truthful,2,no,2.518
-controlled,truthful,3,small,2.432
-controlled,truthful,4,good,2.321
-controlled,truthful,5,location,2.275
-controlled,truthful,6,rate,2.185
-controlled,truthful,7,very,2.093
-controlled,truthful,8,night,1.975
-controlled,truthful,9,great,1.914
-controlled,truthful,10,large,1.892
-controlled,truthful,11,concierge,1.87
-controlled,truthful,12,upgraded,1.815
-controlled,truthful,13,called,1.809
-controlled,truthful,14,quiet,1.747
-controlled,truthful,15,walk,1.68
-controlled,human_fake,1,i,3.294
-controlled,human_fake,2,my,2.868
-controlled,human_fake,3,luxury,2.76
-controlled,human_fake,4,luxurious,2.345
-controlled,human_fake,5,food,2.271
-controlled,human_fake,6,their,2.043
-controlled,human_fake,7,the rooms,1.936
-controlled,human_fake,8,this hotel,1.908
-controlled,human_fake,9,rude,1.9
-controlled,human_fake,10,when,1.897
-controlled,human_fake,11,when i,1.867
-controlled,human_fake,12,were very,1.803
-controlled,human_fake,13,amazing,1.791
-controlled,human_fake,14,clerk,1.785
-controlled,human_fake,15,there,1.771
-controlled,llm_fake,1,floor,3.476
-controlled,llm_fake,2,on the,2.835
-controlled,llm_fake,3,view,2.83
-controlled,llm_fake,4,third floor,2.761
-controlled,llm_fake,5,the third,2.753
-controlled,llm_fake,6,third,2.738
-controlled,llm_fake,7,lobby,2.636
-controlled,llm_fake,8,view of,2.591
-controlled,llm_fake,9,the lobby,2.424
-controlled,llm_fake,10,making,2.255
-controlled,llm_fake,11,felt,2.242
-controlled,llm_fake,12,stunning,2.236
-controlled,llm_fake,13,overall,2.132
-controlled,llm_fake,14,which,2.043
-controlled,llm_fake,15,offered,1.991
+controlled,truthful,1,2,2.989
+controlled,truthful,2,no,2.433
+controlled,truthful,3,good,2.357
+controlled,truthful,4,great,2.272
+controlled,truthful,5,small,2.249
+controlled,truthful,6,night,1.968
+controlled,truthful,7,excellent,1.917
+controlled,truthful,8,bed,1.907
+controlled,truthful,9,rate,1.852
+controlled,truthful,10,concierge,1.836
+controlled,truthful,11,upgraded,1.833
+controlled,truthful,12,location,1.803
+controlled,truthful,13,large,1.795
+controlled,truthful,14,priceline,1.694
+controlled,truthful,15,called,1.694
+controlled,human_fake,1,i,3.725
+controlled,human_fake,2,luxury,2.795
+controlled,human_fake,3,my,2.448
+controlled,human_fake,4,when,2.301
+controlled,human_fake,5,amazing,2.249
+controlled,human_fake,6,luxurious,2.201
+controlled,human_fake,7,the rooms,2.166
+controlled,human_fake,8,x x,2.155
+controlled,human_fake,9,food,2.065
+controlled,human_fake,10,rude,2.006
+controlled,human_fake,11,first of,1.957
+controlled,human_fake,12,x hotel,1.851
+controlled,human_fake,13,when i,1.829
+controlled,human_fake,14,was not,1.802
+controlled,human_fake,15,were very,1.772
+controlled,llm_fake,1,floor,3.821
+controlled,llm_fake,2,lobby,3.113
+controlled,llm_fake,3,on the,3.084
+controlled,llm_fake,4,third floor,2.885
+controlled,llm_fake,5,the third,2.885
+controlled,llm_fake,6,third,2.871
+controlled,llm_fake,7,view,2.756
+controlled,llm_fake,8,the lobby,2.696
+controlled,llm_fake,9,view of,2.437
+controlled,llm_fake,10,felt,2.402
+controlled,llm_fake,11,stunning,2.309
+controlled,llm_fake,12,making,2.249
+controlled,llm_fake,13,x,1.981
+controlled,llm_fake,14,worn,1.955
+controlled,llm_fake,15,atmosphere,1.926
