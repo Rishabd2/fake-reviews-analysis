@@ -52,7 +52,10 @@ def main() -> int:
             shutil.copy(args.from_zip, zip_path)
         else:
             print(f"Downloading {URL}")
-            urllib.request.urlretrieve(URL, zip_path)
+            # the host rejects urllib's default user agent
+            req = urllib.request.Request(URL, headers={"User-Agent": "curl/8.0"})
+            with urllib.request.urlopen(req, timeout=60) as resp, open(zip_path, "wb") as out:
+                shutil.copyfileobj(resp, out)
         got = sha256(zip_path)
         if got != SHA256:
             print(f"Checksum mismatch: {got}", file=sys.stderr)
