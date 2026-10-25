@@ -36,7 +36,7 @@ def test_llm_reviews_complete_and_folded():
 
 def test_controlled_view_strips_prompt_artifacts():
     text = ("When I arrived at the hotel, the lobby was bright. The Hilton Chicago had a "
-            "river view and the staff were kind—mostly. " + "word " * 100)
+            "river view and the staff were kind\u2014mostly. " + "word " * 100)
     out = corpus.controlled_text(text)
     assert not out.lower().startswith("when i arrived")
     for gone in ("hilton", "chicago", "river view"):
