@@ -66,3 +66,33 @@ def confusion(y_true, y_pred, n_classes: int) -> list[list[int]]:
 
 def fmt(m: dict) -> str:
     return f"{100 * m['value']:.1f} [{100 * m['ci_low']:.1f}, {100 * m['ci_high']:.1f}]"
+
+
+def cluster_bootstrap(y_true, y_pred, clusters, positive: int | None = None,
+                      n_boot: int = N_BOOT, seed: int = SEED) -> dict:
+    """95% CI that resamples whole clusters (hotels) instead of single reviews.
+
+    Ott reviews of the same hotel share vocabulary, so the i.i.d. bootstrap can be too
+    narrow. Each Ott hotel is one cluster; each LLM review (no hotel) is its own cluster.
+    """
+    y_true = np.asarray(y_true, dtype=int)
+    y_pred = np.asarray(y_pred, dtype=int)
+    clusters = np.asarray(clusters)
+    n_classes = int(max(y_true.max(), y_pred.max())) + 1
+    ids, inverse = np.unique(clusters, return_inverse=True)
+    members = [np.flatnonzero(inverse == k) for k in range(len(ids))]
+    rng = np.random.default_rng(seed)
+    point = point_metrics(y_true, y_pred, positive, n_classes)
+    draws = {name: [] for name in point}
+    for _ in range(n_boot):
+        pick = rng.integers(0, len(ids), len(ids))
+        idx = np.concatenate([members[k] for k in pick])
+        m = point_metrics(y_true[idx], y_pred[idx], positive, n_classes)
+        for name, v in m.items():
+            draws[name].append(v)
+    return {
+        name: {"value": float(point[name]),
+               "ci_low": float(np.percentile(draws[name], 2.5)),
+               "ci_high": float(np.percentile(draws[name], 97.5))}
+        for name in point
+    }
