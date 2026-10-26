@@ -128,7 +128,7 @@ def main() -> None:
     # Binary controlled for reference
     bc = summary.get("binary", {}).get("controlled", {}).get("cv", {})
     if bc:
-        lines += ["", "## Binary task under the controlled view (first sentence, names, seed phrases removed; 60 words)", "",
+        lines += ["", "## Binary task under the controlled view (first sentence dropped, names and seed phrases replaced with X; 30 to 60 word cap)", "",
                   "| Model | Accuracy | F1 (deceptive) |", "| --- | --- | --- |"]
         for m in ordered(bc):
             mm = bc[m]["metrics"]

@@ -51,7 +51,7 @@ Notebook protocol re-run (`python src/reproduce_notebook.py`): one random 80/20 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | TF-IDF 1-2 gram + logistic regression | 79.4 [77.6, 81.2] | 82.9 [81.5, 84.3] | 82.6 [81.1, 84.0] | 82.7 [81.2, 84.1] | 82.7 [81.3, 84.1] | 72.8 | 76.5 | 98.5 |
 
-## Binary task under the controlled view (first sentence, names, seed phrases removed; 60 words)
+## Binary task under the controlled view (first sentence dropped, names and seed phrases replaced with X; 30 to 60 word cap)
 
 | Model | Accuracy | F1 (deceptive) |
 | --- | --- | --- |
